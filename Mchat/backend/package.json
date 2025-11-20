@@ -1,0 +1,20 @@
+{
+  "name": "y",
+  "version": "1.0.0",
+  "description": "Machio Chat App backend craft",
+  "homepage": "https://github.com/PromiseMachio/Mchat#readme",
+  "bugs": {
+    "url": "https://github.com/PromiseMachio/Mchat/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PromiseMachio/Mchat.git"
+  },
+  "license": "ISC",
+  "author": "Promise Machio",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+     "dev":"nodemon /src/index.js"
+  }
+}
