@@ -1,24 +1,42 @@
-import express from 'express'; // Webframe work...
-import authRouter from '../router/auth.router.js'
-import dotenv from "dotenv"
-import connectDB from '../lib/db.js';
+import express from "express";
+import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
-// Create API to make the the server
-dotenv.config()
+import path from "path";
 
+import { connectDB } from "./lib/db.js"
 
-const app = express();
-const PORT = process.env.PORT 
-app.use(express.json())
+import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
+import { app, server } from "./lib/socket.js";
+
+dotenv.config();
+
+const PORT = process.env.PORT;
+const __dirname = path.resolve();
+
+app.use(express.json());
 app.use(cookieParser());
-// creating routers 
-app.use('/api/auth',authRouter)
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
-app.listen(PORT, ()=>{
-    console.log("Server is up and running in port:"+ PORT)
-})
-connectDB()
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-    
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
+}
+
+server.listen(PORT, () => {
+  console.log("server is running on PORT:" + PORT);
+  connectDB();
+});
